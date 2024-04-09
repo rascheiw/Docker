@@ -1,0 +1,7 @@
+FROM ubuntu:18.04
+RUN apt-get update && apt-get install python3-pip -y && pip3 install requests
+ADD authorization.py /my_server/authorization.py
+WORKDIR /my_server/
+EXPOSE 4000
+CMD python3 authorization.py
+ 

@@ -1,0 +1,52 @@
+services: 
+  fastapi_sentiments:
+    image: datascientest/fastapi:1.0.0
+    container_name: fastapi_sentiments
+    ports:
+      - "8000:8000"
+    networks:
+      - fastapi_sentiments_docker_network
+
+  authen_docker:
+    image: authentification_image
+    container_name: authentification_docker
+    ports:
+      - "5000:5000"
+    volumes:
+      - vol_docker:/home/my_folder
+    networks:
+      - fastapi_sentiments_docker_network
+    depends_on:
+      - fastapi_sentiments
+
+  autho_docker:
+    image: authorization_image
+    container_name: authorization_docker
+    ports:
+      - "4000:4000"
+    volumes:
+      - vol_docker:/home/my_folder
+    networks:
+      - fastapi_sentiments_docker_network
+    depends_on:
+      - authen_docker
+
+  content_docker:
+    image: content_image
+    container_name: content_docker
+    ports:
+      - "6000:6000"
+    volumes:
+      - vol_docker:/home/my_folder
+    networks:
+      - fastapi_sentiments_docker_network
+    depends_on:
+      - autho_docker
+
+networks:
+  fastapi_sentiments_docker_network:
+    name: raph_net
+    external: true
+volumes:
+  vol_docker:
+    name: raph_volume
